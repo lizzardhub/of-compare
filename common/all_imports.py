@@ -133,6 +133,7 @@ def flow_metrics(stereo=False):
         for meth in range(1, 4): # Pre-calculate maximum flow
             print('Looking for', res_path[meth] / filename)
             if (res_path[meth] / filename).exists(): # Flow file with the image name?
+                print('Found!')
                 flows[meth] = read_flo(res_path[meth] / filename) # IMPORTANT: read_flo
                 flows_b[meth] = read_flo(res_path[meth] / filename_b) # IMPORTANT: read_flo
                 if meth != 2:
