@@ -441,7 +441,6 @@ def split_frames(stereo=False):
     # Copy frames into neuronets
     for i, filepath in enumerate(sorted(glob('frames/*'))):
         filename = filepath.split('/')[-1]
-        shutil.copy(filepath, 'selflow/images/in/' + filename)
         #shutil.copy(filepath, 'vcn/images/in/' + filename)
         shutil.copy(filepath, 'pwc/images/in/' + filename)
         shutil.copy(filepath, 'sintelall/MPI-Sintel-complete/training/frames/in/' + filename)
