@@ -42,7 +42,7 @@ def rm_tmp():
         irr/saved_check_point/pwcnet/eval_temp/* \
         sintelall/MPI-Sintel-complete/training/frames/in \
         sintelall/MPI-Sintel-complete/training/frames/out \
-        me/images/in/* me/images/out/*'')
+        me/images/in/* me/images/out/*')
 
     subp_run_str('mkdir -p frames frames_l frames_r \
         sintelall/MPI-Sintel-complete/training/frames/in \
