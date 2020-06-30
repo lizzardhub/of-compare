@@ -125,8 +125,8 @@ def flow_metrics(stereo=False):
         img[:h, :w, :] = load_and_caption(img1, caption[0])
 
         # Compute metrics
-        filename = fimg1.with_suffix('.flo')
-        filename_b = Path(fimg1.stem + '_b').with_suffix('.flo')
+        filename = fname1.with_suffix('.flo')
+        filename_b = Path(fname1.stem + '_b').with_suffix('.flo')
         flows = [0] * 4
         flows_b = [0] * 4
         max_rad_me = 0
