@@ -268,7 +268,7 @@ def weighted_grad_sum(im1, flow):
     sx = ndimage.sobel(gray_im1, axis=0, mode='constant') # Vertical gradient
     sy = ndimage.sobel(gray_im1, axis=1, mode='constant') # Horizontal gradient
     im1_grad = np.sqrt(sx ** 2 + sy ** 2)
-    
+
     return np.sum( flow_grad * np.exp(-im1_grad) ) / (flow.shape[0] * flow.shape[1])
 
 def occlusion_area(flow_f, b_warped):
@@ -280,11 +280,11 @@ def lrc_weighted_photo(im1, flow_f, b_warped, im2_warped):
     res = flow_f + b_warped
     res = (res[:, :, 0] ** 2 + res[:, :, 1] ** 2) ** 0.5
     res = np.exp( -res ) # Regions of trust
-    
+
     euclidian_dist = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
     return np.sum(euclidian_dist * res) / (im1.shape[0] * im1.shape[1])
-    
-    
+
+
 
 '''def weight_sum(flow, img):
     sx = ndimage.sobel(flow[:, :, 0], axis=0, mode='constant')
@@ -297,10 +297,10 @@ def lrc_weighted_photo(im1, flow_f, b_warped, im2_warped):
 
 def generate_perlin_noise_2d(shape, res):
     # Function author: https://github.com/pvigier/perlin-numpy
-    
+
     def f(t):
         return 6*t**5 - 15*t**4 + 10*t**3
-    
+
     delta = (res[0] / shape[0], res[1] / shape[1])
     d = (shape[0] // res[0], shape[1] // res[1])
     grid = np.mgrid[0:res[0]:delta[0],0:res[1]:delta[1]].transpose(1, 2, 0) % 1
@@ -335,7 +335,7 @@ def distortion(img, params=[]):
     else: # Use passed in parameters
         mode = params[0]
         pass_params = True
-    
+
     if mode == 0: # Gaussian
         if pass_params:
             sigma = params[1]
@@ -359,7 +359,7 @@ def distortion(img, params=[]):
             random_noises = [0] * 15
             for i in range(15):
                 random_noises[i] = perlin_noise(img.shape, scale) * intensity
-            
+
             params.append(scale)
             params.append(intensity)
             params.append(random_noises)
@@ -380,29 +380,29 @@ def find_black_frame(img):
 	img = rgb2gray(img)
 	h, w = img.shape
 	bounds = [0, h - 1, 0, w - 1] # y1:y2, x1:x2
-	
+
 	for i in range(h // 2):
 		if np.sum( img[i, :] ) < 10.0:
 			bounds[0] = i + 1
-	
+
 	for i in range(h - 1, h // 2, -1):
 		if np.sum( img[i, :] ) < 10.0:
 			bounds[1] = i - 1
-	
+
 	for j in range(w // 2):
 		if np.sum( img[:, j] ) < 10.0:
 			bounds[2] = j + 1
-	
+
 	for j in range(w - 1, w // 2, -1):
 		if np.sum( img[:, j] ) < 10.0:
 			bounds[3] = j - 1
-	
+
 	return bounds
 
 def split_frames(stereo=False):
     print("Hello!")
     max_area = 1240 * 436 # A Sintel-sized frame
-    
+
     # Move from frames_l and frames_r to frames
     files_l = sorted(glob('frames_l/*'))
     files_r = sorted(glob('frames_r/*'))
@@ -414,24 +414,24 @@ def split_frames(stereo=False):
 
     # Process all frames
     for i, filepath in enumerate(sorted(glob('frames/*'))):
-        #if i > 10:
-        #    os.remove(filepath)
-        #    continue
+        if i > 10:
+            os.remove(filepath)
+            continue
         if not stereo:
             if i < 3 or i >= 8 * 24:
                 os.remove(filepath)
                 continue
-    
+
     img_test = sorted(glob('frames/*'))
     h, w, _c = imread(img_test[0]).shape
     bounds = find_black_frame(imread(img_test[0]))
-    
+
     params = []
     for i, filepath in enumerate(sorted(glob('frames/*'))):
         print(filepath)
         img = skimage.img_as_float(imread(filepath))[bounds[0]:bounds[1], bounds[2]:bounds[3]]
         img = img[::2, ::2]
-        
+
         if not(stereo and i % 2 == 1):
             img, params = distortion(img, params)
         if i == 0:
