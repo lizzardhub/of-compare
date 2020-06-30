@@ -4,6 +4,7 @@ from glob import glob
 import os
 import subprocess
 import shutil
+import random
 from time import time, clock
 
 import numpy as np
@@ -23,6 +24,8 @@ import torch.nn as nn
 import torch.nn.functional as tf
 import logging
 
+from my_flow import *
+
 def subp_run_str(cmd, output=True):
     print('RUN:', cmd)
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -36,7 +39,6 @@ def subp_run_str(cmd, output=True):
 # Delete temp folders
 def rm_tmp():
     subp_run_str('rm -rf frames/* frames_l/* frames_r/* \
-        selflow/images/test_images/* selflow/images/in/* selflow/images/out/* selflow/fr/* \
         vcn/images/in/* vcn/images/out/* \
         pwc/images/in/* pwc/images/out/* \
         irr/saved_check_point/pwcnet/eval_temp/* \
@@ -78,7 +80,7 @@ def load_and_caption(in_image, text):
 
 def flow_metrics(stereo=False):
     # Create video from frames located at
-    # ./selflow/images/out ./vcn/images/out
+    # ./pwc/images/out ./vcn/images/out
     caption = ['CUR FRAME', 'PWC', 'ME', 'IRR-PWC']
 
     input_path = Path('frames')
@@ -122,6 +124,7 @@ def flow_metrics(stereo=False):
         img2 = io.imread(input_path / Path(img_list[i + 1]).name)
         img[:h, :w, :] = load_and_caption(img1, caption[0])
 
+        # Compute metrics
         filename = fimg1.with_suffix('.flo')
         filename_b = Path(fimg1.stem + '_b').with_suffix('.flo')
         flows = [0] * 4
@@ -154,7 +157,7 @@ def flow_metrics(stereo=False):
 
                 res_canvas[meth][...] = load_and_caption( # IMPORTANT: flow_to_png_middlebury
                         flow_to_png_middlebury(flow, rad_clip=max_rad_me), caption[meth])
-        #elif mode == 1:
+        #elif mode == 1: # Warp
         #    filename = filename.split('.')[0] + '.flo'
         #    if filename in selflow_images:
         #        flow = read_flo(selflow_path + '/' + filename)
