@@ -111,7 +111,7 @@ def flow_metrics(stereo=False):
         if i % 10 == 0:
             print()
         fimg1 = img_list[i]
-        fname1 = fimg1.name
+        fname1 = Path(fimg1.name)
 
         img = np.zeros((h * 2, w * 2, 3))
         res_canvas = [0] * 4
