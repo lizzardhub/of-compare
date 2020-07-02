@@ -6,7 +6,9 @@ import os
 from skimage import io
 from time import time
 
-from ..common.utils.flowlib import read_flow, flow_to_image, write_flow
+import sys
+sys.path.append("..") # Adds higher directory to python modules path
+from common.utils.flowlib import read_flow, flow_to_image, write_flow
 
 
 from DE import DE
