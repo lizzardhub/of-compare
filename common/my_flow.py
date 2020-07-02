@@ -308,7 +308,7 @@ def distortion(img, params=[]):
         mode = params[0]
         pass_params = True
 
-    if mode == 0: # Gaussian
+    if mode == 0: # Gaussian. params = [0, sigma]
         if pass_params:
             sigma = params[1]
         else:
