@@ -38,5 +38,5 @@ write_flow(flow, 'a.flo')
 fwd = 'a.flo'
 flow_f = read_flo(fwd)
 img = flow_to_png_middlebury(flow_f)
-show( (im1 * 0.5 + img * 0.5).astype(np.uint8) )
+imsave('a.jpg', (im1 * 0.5 + img * 0.5).astype(np.uint8) )
 del processor
