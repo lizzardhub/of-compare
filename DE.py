@@ -11,7 +11,7 @@ class DE:
     def __init__(self, width, height, hier=True, use_fgs=True,
                  fgs_lambda=8000.0, fgs_sigma_color=1.5,
                  me_warming_frame_num=7, use_color_hm=False,
-                 min_block_size=4, max_block_size=16):
+                 min_block_size=2, max_block_size=16):
 
         assert isinstance(width, int), "Frame width \
                 must be integer! width = {}".format(width)
@@ -127,4 +127,3 @@ class DE:
 #         if np.any(check):
 #             idx = check.index(True)
 #             raise AssertionError("l_to_r.motion: motion files different in line {}".format(idx + 1))
-
