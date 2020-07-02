@@ -14,13 +14,13 @@ from utils.flowlib import read_flow, flow_to_image, write_flow
 #from skimage.io import imsave
 prefix = os.path.dirname(os.path.realpath(__file__))
 with open(os.path.join(prefix, "test", "l.png.my"), "rb") as f:
-	data = f.read()
-	l = [i for i in data]
+    data = f.read()
+    l = [i for i in data]
 l = numpy.array(l).astype(numpy.uint8)[:3 * 1024 * 432].reshape((432, 1024, 3))
 
 with open(os.path.join(prefix, "test", "r.png.my"), "rb") as f:
-	data = f.read()
-	r = [i for i in data]
+    data = f.read()
+    r = [i for i in data]
 r = numpy.array(r).astype(numpy.uint8)[:3 * 1024 * 432].reshape((432, 1024, 3))
 
 processor = ME(l.shape[1], l.shape[0])
@@ -61,7 +61,7 @@ for i in range(0, len(image_list) - 1):
     flow = np.stack([u, v], axis=2).astype(np.float32)
     flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '.flo')
-    
+
     f = processor.EstimateME(img_r, img_l)
     u, v = f
     flow = np.stack([u, v], axis=2).astype(np.float32)
