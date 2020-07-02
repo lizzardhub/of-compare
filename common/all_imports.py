@@ -25,8 +25,6 @@ import torch.nn as nn
 import torch.nn.functional as tf
 import logging
 
-from .my_flow import *
-
 def subp_run_str(cmd, output=True):
     print('RUN:', cmd)
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
