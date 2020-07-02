@@ -66,9 +66,12 @@ for i in range(0, len(image_list) - 1, 2):
     write_flow(flow, './images/out/' + fname.split('.')[0] + '.flo')
     print('{:.3f} seconds elapsed'.format(time() - tb))
 
-    f = processor.EstimateME(img_r, img_l)
-    u, v = f
+    tb = time()
+    processor.EstimateDisp(img_r, img_l)
+    f = processor.GetRawDisparityMap()
+    u, v = f[1][0], f[1][1]
     flow = np.stack([u, v], axis=2).astype(np.float32)
     flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '_b.flo')
+    print('{:.3f} seconds elapsed'.format(time() - tb))
     #io.imsave('./images/out/' + fname, flow_to_image(flow))
