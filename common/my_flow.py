@@ -1,20 +1,4 @@
-from __future__ import absolute_import, division, print_function
-
-import numpy as np
-from scipy import ndimage
-from skimage.color import rgb2gray
-import matplotlib.pyplot as plt
-import re
-import sys
-
-import torch
-import torch.nn as nn
-import torch.nn.functional as tf
-import logging
-
-import random
-from datetime import datetime
-
+from .all_imports import *
 from .utils.flowlib import write_flow
 
 TAG_CHAR = np.array([202021.25], np.float32)

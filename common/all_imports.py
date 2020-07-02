@@ -7,6 +7,7 @@ import subprocess
 import shutil
 import random
 from time import time, clock
+from datetime import datetime
 
 import numpy as np
 
@@ -14,8 +15,10 @@ import png
 from skimage import io
 from skimage.io import imread
 from skimage.transform import rescale
+from skimage.color import rgb2gray
 import imageio
 from PIL import Image, ImageFont, ImageDraw
+from scipy import ndimage
 import matplotlib as mpl
 import matplotlib.colors as cl
 import matplotlib.pyplot as plt
