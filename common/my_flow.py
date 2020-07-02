@@ -370,7 +370,7 @@ def split_frames(stereo=False):
 
     # Process all frames
     for i, filepath in enumerate(sorted(glob('frames/*'))):
-        if i > 10:
+        if i > 40:
             os.remove(filepath)
             continue
         if not stereo:
