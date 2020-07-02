@@ -367,6 +367,7 @@ def split_frames(stereo=False):
         target_fname_r = 'frames/frame_' + str(i * 2 + 2).zfill(4) + '.jpg'
         shutil.copy(files_l[i], target_fname_l)
         shutil.copy(files_r[i], target_fname_r)
+    exit(0)
 
     # Process all frames
     for i, filepath in enumerate(sorted(glob('frames/*'))):
