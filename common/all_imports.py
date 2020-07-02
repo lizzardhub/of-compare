@@ -14,7 +14,7 @@ import numpy as np
 import png
 import skimage
 from skimage import io
-from skimage.io import imread
+from skimage.io import imread, imsave
 from skimage.transform import rescale
 from skimage.color import rgb2gray
 import imageio
