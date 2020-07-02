@@ -12,6 +12,7 @@ from datetime import datetime
 import numpy as np
 
 import png
+import skimage
 from skimage import io
 from skimage.io import imread
 from skimage.transform import rescale
