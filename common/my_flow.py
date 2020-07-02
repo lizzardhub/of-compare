@@ -192,35 +192,6 @@ def read_flo(filename):
 
 # *** New functions
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as tf
-import logging
-
-import numpy as np
-import os
-from os.path import join
-import shutil
-import skimage
-from skimage import filters
-from skimage import io
-from skimage.io import imread, imsave
-from skimage.transform import rescale
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import matplotlib.animation as manimation
-from glob import glob
-
-import numpy as np
-import matplotlib.pyplot as plt
-import re
-import sys
-
-
-TAG_CHAR = np.array([202021.25], np.float32)
-UNKNOWN_FLOW_THRESH = 1e7
-
-
 def get_grid(x):
     grid_H = torch.linspace(-1.0, 1.0, x.size(3)).view(1, 1, 1, x.size(3)).expand(x.size(0), 1, x.size(2), x.size(3))
     grid_V = torch.linspace(-1.0, 1.0, x.size(2)).view(1, 1, x.size(2), 1).expand(x.size(0), 1, x.size(2), x.size(3))
@@ -329,7 +300,8 @@ def perlin_noise(shape, scale):
 
 def distortion(img, params=[]):
     if not params: # Generate random parameters
-        mode = random.randrange(0, 3)
+        #mode = random.randrange(0, 3)
+        mode = 2
         params.append(mode)
         pass_params = False
     else: # Use passed in parameters

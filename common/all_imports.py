@@ -2,14 +2,15 @@ from __future__ import absolute_import, division, print_function
 from pathlib import Path
 from glob import glob
 import os
+import sys
 import subprocess
 import shutil
 import random
 from time import time, clock
 
 import numpy as np
-import png
 
+import png
 from skimage import io
 from skimage.io import imread
 from skimage.transform import rescale
