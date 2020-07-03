@@ -40,3 +40,8 @@ def subp_run_str(cmd, output=True):
             print(line.decode(), end='')
     rc = process.poll()
     return rc
+
+def show(img):
+    fig, ax = plt.subplots(figsize=(10, 10))
+    im = ax.imshow(img, cmap='gray', vmin=0, vmax=1)
+    plt.show()
