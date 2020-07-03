@@ -71,7 +71,7 @@ for i in range(0, len(image_list) - 1, 2):
     print('{:.3f} seconds elapsed'.format(time() - tb))
 
     tb = time()
-    flow = estimate_disp(processor, img_l, img_r)
+    flow = estimate_disp(processor, img_r, img_l)
     flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '_b.flo')
     print('{:.3f} seconds elapsed'.format(time() - tb))
