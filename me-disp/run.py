@@ -49,10 +49,12 @@ img_r = io.imread(image_list[1])
 
 h, w = img_l.shape[:2]
 
-max_h = int(h // 16 * 16)
-max_w = int(w // 16 * 16)
-if max_h < h: max_h += 16
-if max_w < w: max_w += 16
+max_h = h
+max_w = w
+#max_h = int(h // 16 * 16)
+#max_w = int(w // 16 * 16)
+#if max_h < h: max_h += 16
+#if max_w < w: max_w += 16
 
 processor = DE(max_w, max_h)
 
@@ -66,13 +68,13 @@ for i in range(0, len(image_list) - 1, 2):
 
     tb = time()
     flow = estimate_disp(processor, img_l, img_r)
-    flow = cv2.resize(flow, (w, h))
+    #flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '.flo')
     print('{:.3f} seconds elapsed'.format(time() - tb))
 
     tb = time()
     flow = estimate_disp(processor, img_r, img_l)
-    flow = cv2.resize(flow, (w, h))
+    #flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '_b.flo')
     print('{:.3f} seconds elapsed'.format(time() - tb))
     #io.imsave('./images/out/' + fname, flow_to_image(flow))
