@@ -381,15 +381,15 @@ def split_frames(stereo=False):
                 continue
 
     img_test = sorted(glob('frames/*'))
-    h, w, _c = imread(img_test[0]).shape
     bounds = find_black_frame(imread(img_test[0]))
 
     params = []
     for i, filepath in enumerate(sorted(glob('frames/*'))):
         print(filepath)
         img = skimage.img_as_float(imread(filepath))[bounds[0]:bounds[1], bounds[2]:bounds[3]]
-        
+
         #img = img[::2, ::2]
+        h, w, _c = img.shape
         img = cv2.resize(img, (w // 2, h // 2))
 
         if not(stereo and i % 2 == 1):
