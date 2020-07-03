@@ -62,9 +62,10 @@ for i in range(0, len(image_list) - 1, 2):
     fname = image_list[i].split('/')[-1]
     img_l = io.imread(image_list[i])
     img_r = io.imread(image_list[i + 1])
+    print('Image paths:', image_list[i], image_list[i + 1])
 
-    img_l = cv2.resize(img_l,(max_w, max_h))
-    img_r = cv2.resize(img_r,(max_w, max_h))
+    #img_l = cv2.resize(img_l,(max_w, max_h))
+    #img_r = cv2.resize(img_r,(max_w, max_h))
 
     tb = time()
     flow = estimate_disp(processor, img_l, img_r)
