@@ -334,28 +334,28 @@ def distortion(img, params=[]):
         return (img, [2])
 
 def find_black_frame(img):
-	img = rgb2gray(img)
-	h, w = img.shape
-	bounds = [0, h - 1, 0, w - 1] # y1:y2, x1:x2
+    img = rgb2gray(img)
+    h, w = img.shape
+    bounds = [0, h - 1, 0, w - 1] # y1:y2, x1:x2
     THRESH = 10.0
 
-	for i in range(h // 2):
-		if np.sum( img[i, :] ) < THRESH:
-			bounds[0] = i + 1
+    for i in range(h // 2):
+    if np.sum( img[i, :] ) < THRESH:
+    bounds[0] = i + 1
 
-	for i in range(h - 1, h // 2, -1):
-		if np.sum( img[i, :] ) < THRESH:
-			bounds[1] = i - 1
+    for i in range(h - 1, h // 2, -1):
+    if np.sum( img[i, :] ) < THRESH:
+    bounds[1] = i - 1
 
-	for j in range(w // 2):
-		if np.sum( img[:, j] ) < THRESH:
-			bounds[2] = j + 1
+    for j in range(w // 2):
+    if np.sum( img[:, j] ) < THRESH:
+    bounds[2] = j + 1
 
-	for j in range(w - 1, w // 2, -1):
-		if np.sum( img[:, j] ) < THRESH:
-			bounds[3] = j - 1
+    for j in range(w - 1, w // 2, -1):
+    if np.sum( img[:, j] ) < THRESH:
+    bounds[3] = j - 1
 
-	return bounds
+    return bounds
 
 def split_frames(stereo=False):
     print("Hello!")
