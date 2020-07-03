@@ -2,9 +2,11 @@ from __future__ import absolute_import, division, print_function
 from pathlib import Path
 from glob import glob
 import os
+from os.path import join
 import sys
 import subprocess
 import shutil
+from shutil import copyfile
 import random
 from time import time, clock
 from datetime import datetime
