@@ -392,9 +392,9 @@ def split_frames(stereo=False):
             img, params = distortion(img, params)
         if i == 0:
             print('Distortion params after func:', params)
-        
+
         print(Path(filepath).suffix)
-        if Path(filepath).suffix == '.jpg':
+        if Path(filepath).suffix == 'jpg':
             imsave(filepath, img, quality=100)
         else:
             imsave(filepath, img)
