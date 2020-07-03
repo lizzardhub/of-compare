@@ -36,6 +36,13 @@ print(u.shape, v.shape)
 print(np.sum(np.abs(u)))
 print(np.sum(np.abs(v)))'''
 
+def estimate_disp(processor, img_l, img_r):
+    processor.EstimateDisp(img_l, img_r)
+    f = processor.GetDisparityMap()
+    u, v = f[1][0], f[1][1]
+    flow = np.stack([u, v], axis=2).astype(np.float32)
+    return flow
+
 image_list = sorted(glob('/content/frames/*'))
 img_l = io.imread(image_list[0]) # Fake read to determine dimensions
 img_r = io.imread(image_list[1])
@@ -47,7 +54,7 @@ max_w = int(w // 16 * 16)
 if max_h < h: max_h += 16
 if max_w < w: max_w += 16
 
-processor = DE(max_w, max_h, max_block_size=8)
+processor = DE(max_w, max_h)
 
 for i in range(0, len(image_list) - 1, 2):
     fname = image_list[i].split('/')[-1]
@@ -58,19 +65,13 @@ for i in range(0, len(image_list) - 1, 2):
     img_r = cv2.resize(img_r,(max_w, max_h))
 
     tb = time()
-    processor.EstimateDisp(img_l, img_r)
-    f = processor.GetRawDisparityMap()
-    u, v = f[1][0], f[1][1]
-    flow = np.stack([u, v], axis=2).astype(np.float32)
+    flow = estimate_disp(processor, img_l, img_r)
     flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '.flo')
     print('{:.3f} seconds elapsed'.format(time() - tb))
 
     tb = time()
-    processor.EstimateDisp(img_r, img_l)
-    f = processor.GetRawDisparityMap()
-    u, v = f[1][0], f[1][1]
-    flow = np.stack([u, v], axis=2).astype(np.float32)
+    flow = estimate_disp(processor, img_l, img_r)
     flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '_b.flo')
     print('{:.3f} seconds elapsed'.format(time() - tb))
