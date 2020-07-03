@@ -47,7 +47,7 @@ max_w = int(w // 16 * 16)
 if max_h < h: max_h += 16
 if max_w < w: max_w += 16
 
-processor = DE(max_w, max_h)
+processor = DE(max_w, max_h, max_block_size=8)
 
 for i in range(0, len(image_list) - 1, 2):
     fname = image_list[i].split('/')[-1]
