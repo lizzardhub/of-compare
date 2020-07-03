@@ -386,7 +386,7 @@ def split_frames(stereo=False):
     for i, filepath in enumerate(sorted(glob('frames/*'))):
         print(filepath)
         img = skimage.img_as_float(imread(filepath))[bounds[0]:bounds[1], bounds[2]:bounds[3]]
-        #img = img[::2, ::2]
+        img = img[::2, ::2]
 
         if not(stereo and i % 2 == 1):
             img, params = distortion(img, params)
