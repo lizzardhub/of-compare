@@ -181,8 +181,8 @@ backwarp_tenGrid = {}
 backwarp_tenPartial = {}
 
 def backwarp(tenInput, tenFlow):
-    tenInput = torch.from_numpy(x[np.newaxis, ...].astype(np.float32)).transpose(2, 3).transpose(1, 2)
-    tenFlow = torch.from_numpy(flow[np.newaxis, ...]).transpose(2, 3).transpose(1, 2)
+    tenInput = torch.from_numpy(tenInput[np.newaxis, ...].astype(np.float32)).transpose(2, 3).transpose(1, 2)
+    tenFlow = torch.from_numpy(tenFlow[np.newaxis, ...]).transpose(2, 3).transpose(1, 2)
 
     if str(tenFlow.size()) not in backwarp_tenGrid:
         tenHorizontal = torch.linspace(-1.0, 1.0, tenFlow.shape[3]).view(1, 1, 1, tenFlow.shape[3]).expand(tenFlow.shape[0], -1, tenFlow.shape[2], -1)
