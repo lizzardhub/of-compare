@@ -99,9 +99,9 @@ def flow_metrics(stereo=False):
             if (res_path[meth] / filename).exists(): # Flow file with the image name?
                 flows[meth] = read_flo(res_path[meth] / filename) # IMPORTANT: read_flo
                 flows_b[meth] = read_flo(res_path[meth] / filename_b) # IMPORTANT: read_flo
-                #if meth != 2:
-                meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
-                max_rad_me = max(max_rad_me, meth_max)
+                if meth != 2:
+                    meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
+                    max_rad_me = max(max_rad_me, meth_max)
         for meth in range(1, 4):
             if (res_path[meth] / filename).exists():
                 flow = flows[meth]

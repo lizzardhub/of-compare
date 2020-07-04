@@ -364,7 +364,7 @@ def split_frames(stereo=False):
     # Move from frames_l and frames_r to frames
     files_l = sorted(glob('frames_l/*'))
     files_r = sorted(glob('frames_r/*'))
-    for i in range( 0, min(8 * 24, len(files_l)) ):
+    for i in range( 3, min(8 * 24, len(files_l)) ):
         target_fname_l = 'frames/frame_' + str(i * 2 + 1).zfill(4) + '.jpg'
         target_fname_r = 'frames/frame_' + str(i * 2 + 2).zfill(4) + '.jpg'
         shutil.copy(files_l[i], target_fname_l)
@@ -372,11 +372,11 @@ def split_frames(stereo=False):
 
     # Process all frames
     for i, filepath in enumerate(sorted(glob('frames/*'))):
-        if i > 10:
+        if i > 30:
             os.remove(filepath)
             continue
         if not stereo:
-            if i < 0 or i >= 8 * 24:
+            if i < 3 or i >= 8 * 24:
                 os.remove(filepath)
                 continue
 
