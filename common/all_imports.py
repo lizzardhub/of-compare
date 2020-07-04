@@ -41,6 +41,9 @@ def subp_run_str(cmd, output=True):
     rc = process.poll()
     return rc
 
+def subp_bash(cmd):
+    subp_run_str("bash -c '" + cmd + "'")
+
 def show(img):
     fig, ax = plt.subplots(figsize=(10, 10))
     im = ax.imshow(img, cmap='gray', vmin=0, vmax=1)
