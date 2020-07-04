@@ -125,8 +125,8 @@ def flow_to_png_middlebury(flow, rad_clip=999):
     """
 
     #flow = flow.transpose([1, 2, 0])
-    u = flow[:, :, 0]
-    v = flow[:, :, 1]
+    u = flow[:, :, 0].copy()
+    v = flow[:, :, 1].copy()
 
     maxu = -999.
     maxv = -999.
