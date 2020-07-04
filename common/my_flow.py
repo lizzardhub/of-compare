@@ -181,6 +181,8 @@ backwarp_tenGrid = {}
 backwarp_tenPartial = {}
 
 def backwarp(tenInput, tenFlow):
+    # From Simon Niklaus: https://github.com/sniklaus/pytorch-pwc
+    
     tenInput = torch.from_numpy(tenInput[np.newaxis, ...].astype(np.float32)).transpose(2, 3).transpose(1, 2)
     tenFlow = torch.from_numpy(tenFlow[np.newaxis, ...]).transpose(2, 3).transpose(1, 2)
 
