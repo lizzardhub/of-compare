@@ -40,7 +40,7 @@ print(np.sum(np.abs(v)))'''
 def estimate_disp(processor, img_l, img_r):
     processor.EstimateDisp(img_l, img_r)
     f = processor.GetDisparityMap()
-    u, v = f[0][0], f[0][1]
+    u, v = f[1][0], f[1][1]
     flow = np.stack([u, v], axis=2).astype(np.float32)
     return flow
 
