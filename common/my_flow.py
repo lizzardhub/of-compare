@@ -235,13 +235,13 @@ def warp(x, flow):
 
     return np.nan_to_num((x_warp * mask).transpose(1, 2).transpose(2, 3).numpy()[0])
 
-def warpforw(flow): # flow.shape = (2, h, w)
-    h, w = flow.shape[1:3]
+def warpforw(flow): # flow.shape = (h, w, 2)
+    h, w = flow.shape[:2]
     res = np.zeros((h, w), dtype=np.float32)
     uindex = np.repeat( np.arange(w, dtype=float)[np.newaxis, :], h, axis=0 )
     vindex = np.repeat( np.arange(h, dtype=float)[:, np.newaxis], w, axis=1 )
-    uindex += flow[0]
-    vindex += flow[1]
+    uindex += flow[:, :, 0]
+    vindex += flow[:, :, 1]
 
     for y in range(2): # vertical
         nv = None
