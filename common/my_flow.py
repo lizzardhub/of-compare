@@ -182,7 +182,7 @@ backwarp_tenPartial = {}
 
 def backwarp(tenInput, tenFlow):
     # From Simon Niklaus: https://github.com/sniklaus/pytorch-pwc
-    
+
     tenInput = torch.from_numpy(tenInput[np.newaxis, ...].astype(np.float32)).transpose(2, 3).transpose(1, 2)
     tenFlow = torch.from_numpy(tenFlow[np.newaxis, ...]).transpose(2, 3).transpose(1, 2)
 
@@ -234,6 +234,48 @@ def warp(x, flow):
     mask = (mask >= 0.9999).float()
 
     return np.nan_to_num((x_warp * mask).transpose(1, 2).transpose(2, 3).numpy()[0])
+
+def warpforw(flow): # flow.shape = (2, h, w)
+    h, w = flow.shape[1:3]
+    res = np.zeros((h, w), dtype=np.float32)
+    uindex = np.repeat( np.arange(w, dtype=float)[np.newaxis, :], h, axis=0 )
+    vindex = np.repeat( np.arange(h, dtype=float)[:, np.newaxis], w, axis=1 )
+    uindex += flow[0]
+    vindex += flow[1]
+
+    for y in range(2): # vertical
+        nv = None
+        if y == 0:
+            nv = np.floor(vindex)
+        else:
+            nv = np.ceil(vindex)
+        nvint = nv.astype(int)
+
+        vfrac = 1 - np.abs(vindex - nv)
+        vmask = (nvint < 0) | (nvint >= h)
+        if y == 1:
+            vmask = vmask | (vfrac == 1)
+        nvint[vmask] = 0
+        vfrac[vmask] = 0
+
+        for x in range(2): # horizontal
+            nu = None
+            if x == 0:
+                nu = np.floor(uindex)
+            else:
+                nu = np.ceil(uindex)
+            nuint = nu.astype(int)
+
+            ufrac = 1 - np.abs(uindex - nu)
+            umask = (nuint < 0) | (nuint >= w)
+            if x == 1:
+                umask = umask | (ufrac == 1)
+            nuint[umask] = 0
+            ufrac[umask] = 0
+
+            np.add.at(res, (nvint, nuint), vfrac * ufrac)
+
+    return res
 
 def photometric_diff(im1, im2_warped):
     euclidian_dist = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
