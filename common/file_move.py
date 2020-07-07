@@ -38,7 +38,6 @@ def load_and_caption(in_image, text):
     font = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf", 40)
     draw = ImageDraw.Draw(pil_img)
     draw.text((0, 0), text, (255, 0, 0), font=font)
-    draw = ImageDraw.Draw(pil_img)
     in_image = np.array(pil_img)
 
     return in_image
