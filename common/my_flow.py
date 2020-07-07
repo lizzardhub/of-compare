@@ -373,7 +373,10 @@ def distortion(img, params=[]):
         else:
             sigma = 1.5 + random.random() * 1.5
             params.append(sigma)
-        img = filters.gaussian(img, sigma=sigma)
+        #img = filters.gaussian(img, sigma=sigma)
+        pil_img = Image.fromarray(img.astype(np.uint8))
+        im1 = pil_img.filter(ImageFilter.GaussianBlur(radius=sigma))
+        img = np.array(im1)
         return (img, params)
     elif mode == 1: # Perlin noise. params = [1, scale, intensity, random_noises]
         if pass_params:

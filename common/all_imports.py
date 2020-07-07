@@ -22,6 +22,7 @@ from skimage.transform import rescale
 from skimage.color import rgb2gray
 import imageio
 from PIL import Image, ImageFont, ImageDraw
+from PIL import ImageFilter
 from scipy import ndimage
 
 import matplotlib as mpl
