@@ -366,7 +366,7 @@ def occ_precision(flow_f, flow_b):
 
     lrc_crit[wb_crit] = 0
 
-    Sum both occlusions
+    #Sum both occlusions
     prec_metric += np.sum(lrc_crit) / (h * w)
     #print('Metric:', prec_metric * 100)
     return prec_metric / 2 * 100
