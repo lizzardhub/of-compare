@@ -303,36 +303,65 @@ def photometric_diff(im1, im2_warped):
     euclidian_dist = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
     return np.sum(euclidian_dist) / (im1.shape[0] * im1.shape[1])
 
-def grad_sum(flow):
-    sx = ndimage.sobel(flow[:, :, 0], axis=0, mode='constant') # Vertical gradient
-    sy = ndimage.sobel(flow[:, :, 1], axis=1, mode='constant') # Horizontal gradient
-    return np.sum(np.sqrt(sx ** 2 + sy ** 2)) / (flow.shape[0] * flow.shape[1])
+# def grad_sum(flow):
+#     sx = ndimage.sobel(flow[:, :, 0], axis=0, mode='constant') # Vertical gradient
+#     sy = ndimage.sobel(flow[:, :, 1], axis=1, mode='constant') # Horizontal gradient
+#     return np.sum(np.sqrt(sx ** 2 + sy ** 2)) / (flow.shape[0] * flow.shape[1])
+#
+# def weighted_grad_sum(im1, flow):
+#     # Flow gradient
+#     sx = ndimage.sobel(flow[:, :, 0], axis=0, mode='constant') # Vertical gradient
+#     sy = ndimage.sobel(flow[:, :, 1], axis=1, mode='constant') # Horizontal gradient
+#     flow_grad = np.sqrt(sx ** 2 + sy ** 2)
+#     # Image1 gradient
+#     gray_im1 = rgb2gray(im1)
+#     sx = ndimage.sobel(gray_im1, axis=0, mode='constant') # Vertical gradient
+#     sy = ndimage.sobel(gray_im1, axis=1, mode='constant') # Horizontal gradient
+#     im1_grad = np.sqrt(sx ** 2 + sy ** 2)
+#
+#     return np.sum( flow_grad * np.exp(-im1_grad) ) / (flow.shape[0] * flow.shape[1])
+#
+# def occlusion_area(flow_f, b_warped):
+#     res = flow_f + b_warped
+#     res = (res[:, :, 0] ** 2 + res[:, :, 1] ** 2) ** 0.5
+#     return np.sum(res) / (flow_f.shape[0] * flow_f.shape[1])
+#
+# def lrc_weighted_photo(im1, flow_f, b_warped, im2_warped):
+#     res = flow_f + b_warped
+#     res = (res[:, :, 0] ** 2 + res[:, :, 1] ** 2) ** 0.5
+#     res = np.exp( -res ) # Regions of trust
+#
+#     euclidian_dist = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
+#     return np.sum(euclidian_dist * res) / (im1.shape[0] * im1.shape[1])
 
-def weighted_grad_sum(im1, flow):
-    # Flow gradient
-    sx = ndimage.sobel(flow[:, :, 0], axis=0, mode='constant') # Vertical gradient
-    sy = ndimage.sobel(flow[:, :, 1], axis=1, mode='constant') # Horizontal gradient
-    flow_grad = np.sqrt(sx ** 2 + sy ** 2)
-    # Image1 gradient
-    gray_im1 = rgb2gray(im1)
-    sx = ndimage.sobel(gray_im1, axis=0, mode='constant') # Vertical gradient
-    sy = ndimage.sobel(gray_im1, axis=1, mode='constant') # Horizontal gradient
-    im1_grad = np.sqrt(sx ** 2 + sy ** 2)
+def confident_photo(im1, im2, flows_f, flows_b):
+    # flows_f = [f1, f2, f3]
+    # flows_b = [b1, b2, b3]
+    # f_i.shape = b_i.shape = [h, w, 2]
+    h, w = flows_f[0].shape[:2]
+    n = len(flows_f)
 
-    return np.sum( flow_grad * np.exp(-im1_grad) ) / (flow.shape[0] * flow.shape[1])
+    # Confidence intersection - fair comparison of photometric loss
+    conf_intersect = np.ones((h, w))
+    for i in range(n):
+        flow_f = flows_f[i]
+        flow_b = flows_b[i]
 
-def occlusion_area(flow_f, b_warped):
-    res = flow_f + b_warped
-    res = (res[:, :, 0] ** 2 + res[:, :, 1] ** 2) ** 0.5
-    return np.sum(res) / (flow_f.shape[0] * flow_f.shape[1])
+        b_warped = backwarp(flow_b, flow_f) # -> forward occlusions
+        res = b_warped + flow_f
+        mag = np.sqrt(res[:, :, 0] ** 2 + res[:, :, 1] ** 2)
+        THR = 1
+        confidence = mag < THR
+        conf_intersect *= confidence
 
-def lrc_weighted_photo(im1, flow_f, b_warped, im2_warped):
-    res = flow_f + b_warped
-    res = (res[:, :, 0] ** 2 + res[:, :, 1] ** 2) ** 0.5
-    res = np.exp( -res ) # Regions of trust
+    metric = np.zeros((n))
+    for i in range(n):
+        flow_f = flows_f[i]
 
-    euclidian_dist = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
-    return np.sum(euclidian_dist * res) / (im1.shape[0] * im1.shape[1])
+        im2_warped = backwarp(im2, flow_f)
+        diff_f = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
+        metric[i] = np.sum(conf_intersect * diff_f) / (h * w)
+    return metric
 
 def occ_precision(flow_f, flow_b):
     h, w = flow_f.shape[:2]
@@ -346,6 +375,7 @@ def occ_precision(flow_f, flow_b):
     res = b_warped + flow_f
     mag = np.sqrt(res[:, :, 0] ** 2 + res[:, :, 1] ** 2)
 
+    # Observe errors in range[MIN, MAX], contribution equals error
     MIN_ERR = 0.5
     MAX_ERR = 5
     lrc_crit = np.clip((mag - MIN_ERR) / (MAX_ERR - MIN_ERR), 0, 1)
