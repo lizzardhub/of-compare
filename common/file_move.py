@@ -157,8 +157,8 @@ def flow_metrics(stereo=False):
                     meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
                     max_rad_me = max(max_rad_me, meth_max)
             else:
-                flows[meth] = np.zeros((h, w, 2))
-                flows_b[meth] = np.zeros((h, w, 2))
+                flows[meth] = np.zeros((h, w, 2), dtype=np.float32)
+                flows_b[meth] = np.zeros((h, w, 2), dtype=np.float32)
 
         common_photo = confident_photo(img1, img2, flows[1:], flows_b[1:])
         for meth in range(1, 4):
