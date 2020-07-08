@@ -235,68 +235,69 @@ def warp(x, flow):
 
     return np.nan_to_num((x_warp * mask).transpose(1, 2).transpose(2, 3).numpy()[0])
 
-from Forward_Warp import forward_warp
+if 0:
+    from Forward_Warp import forward_warp
 
-def warpforw(flow): # flow.shape = (h, w, 2)
-    # Using https://github.com/lizhihao6/Forward-Warp
-    h, w = flow.shape[:2]
-    flow = flow[np.newaxis, :, :, :]
-    im = np.ones((1, h, w, 1))
-    im = torch.FloatTensor(im).permute(0, 3, 1, 2)
-    flow = torch.FloatTensor(flow)
+    def warpforw(flow): # flow.shape = (h, w, 2)
+        # Using https://github.com/lizhihao6/Forward-Warp
+        h, w = flow.shape[:2]
+        flow = flow[np.newaxis, :, :, :]
+        im = np.ones((1, h, w, 1))
+        im = torch.FloatTensor(im).permute(0, 3, 1, 2)
+        flow = torch.FloatTensor(flow)
 
-    fw = forward_warp()
-    im = im.cuda()
-    flow = flow.cuda()
-    im1_cuda = fw(im, flow)
+        fw = forward_warp()
+        im = im.cuda()
+        flow = flow.cuda()
+        im1_cuda = fw(im, flow)
 
-    im1_cuda = im1_cuda.permute(0, 2, 3, 1)[0]
-    res = im1_cuda.cpu().numpy()
-    return res[:, :, 0]
+        im1_cuda = im1_cuda.permute(0, 2, 3, 1)[0]
+        res = im1_cuda.cpu().numpy()
+        return res[:, :, 0]
 
-    # END
+        # END
 
-    res = np.zeros((h, w), dtype=np.float32)
-    uindex = np.repeat( np.arange(w, dtype=float)[np.newaxis, :], h, axis=0 )
-    vindex = np.repeat( np.arange(h, dtype=float)[:, np.newaxis], w, axis=1 )
-    uindex += flow[:, :, 0] # Get indexes instead of displacement vectors
-    vindex += flow[:, :, 1]
+        res = np.zeros((h, w), dtype=np.float32)
+        uindex = np.repeat( np.arange(w, dtype=float)[np.newaxis, :], h, axis=0 )
+        vindex = np.repeat( np.arange(h, dtype=float)[:, np.newaxis], w, axis=1 )
+        uindex += flow[:, :, 0] # Get indexes instead of displacement vectors
+        vindex += flow[:, :, 1]
 
-    for y in range(2): # Vertical
-        nv = None # Select floor or ceil nearest integer point
-        if y == 0:
-            nv = np.floor(vindex)
-        else:
-            nv = np.ceil(vindex)
-        nvint = nv.astype(int) # nv is float, just convert type
-
-        vfrac = 1 - np.abs(vindex - nv) # Contribution to the point
-        vmask = (nvint < 0) | (nvint >= h) # Pixels that fly out of frame
-        if y == 1:
-            vmask = vmask | (vfrac == 1) # Avoid duplication if integer coor
-        nvint[vmask] = 0 # Easy way of removing contribution:)
-        vfrac[vmask] = 0
-
-        for x in range(2): # Horizontal, code is same as vertical
-            nu = None
-            if x == 0:
-                nu = np.floor(uindex)
+        for y in range(2): # Vertical
+            nv = None # Select floor or ceil nearest integer point
+            if y == 0:
+                nv = np.floor(vindex)
             else:
-                nu = np.ceil(uindex)
-            nuint = nu.astype(int)
+                nv = np.ceil(vindex)
+            nvint = nv.astype(int) # nv is float, just convert type
 
-            ufrac = 1 - np.abs(uindex - nu)
-            umask = (nuint < 0) | (nuint >= w)
-            if x == 1:
-                umask = umask | (ufrac == 1)
-            nuint[umask] = 0
-            ufrac[umask] = 0
+            vfrac = 1 - np.abs(vindex - nv) # Contribution to the point
+            vmask = (nvint < 0) | (nvint >= h) # Pixels that fly out of frame
+            if y == 1:
+                vmask = vmask | (vfrac == 1) # Avoid duplication if integer coor
+            nvint[vmask] = 0 # Easy way of removing contribution:)
+            vfrac[vmask] = 0
 
-            # Avoid "race condition" during addition
-            # https://jakevdp.github.io/PythonDataScienceHandbook/02.07-fancy-indexing.html
-            np.add.at(res, (nvint, nuint), vfrac * ufrac)
+            for x in range(2): # Horizontal, code is same as vertical
+                nu = None
+                if x == 0:
+                    nu = np.floor(uindex)
+                else:
+                    nu = np.ceil(uindex)
+                nuint = nu.astype(int)
 
-    return res
+                ufrac = 1 - np.abs(uindex - nu)
+                umask = (nuint < 0) | (nuint >= w)
+                if x == 1:
+                    umask = umask | (ufrac == 1)
+                nuint[umask] = 0
+                ufrac[umask] = 0
+
+                # Avoid "race condition" during addition
+                # https://jakevdp.github.io/PythonDataScienceHandbook/02.07-fancy-indexing.html
+                np.add.at(res, (nvint, nuint), vfrac * ufrac)
+
+        return res
 
 def photometric_diff(im1, im2_warped):
     euclidian_dist = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
@@ -497,7 +498,7 @@ def split_frames(stereo=False):
     # Disparity. Move from frames_l and frames_r to frames
     files_l = sorted(glob('frames_l/*'))
     files_r = sorted(glob('frames_r/*'))
-    for i in range( 100, min(101, len(files_l)) ): # 3, 8 * 24
+    for i in range( 100, min(101, len(files_l)) ): # 3, 6 * 24
         target_fname_l = 'frames/frame_' + str(i * 2 + 1).zfill(4) + '.jpg'
         target_fname_r = 'frames/frame_' + str(i * 2 + 2).zfill(4) + '.jpg'
         shutil.copy(files_l[i], target_fname_l)
