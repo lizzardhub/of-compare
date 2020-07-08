@@ -235,8 +235,22 @@ def warp(x, flow):
 
     return np.nan_to_num((x_warp * mask).transpose(1, 2).transpose(2, 3).numpy()[0])
 
+from Forward_Warp import forward_warp
+
 def warpforw(flow): # flow.shape = (h, w, 2)
     h, w = flow.shape[:2]
+    im = np.ones((h, w, 1))
+    im = torch.FloatTensor(im).permute(0, 3, 1, 2)
+
+    fw = forward_warp()
+    im = im0.cuda()
+    flow = flow.cuda()
+    im1_cuda = fw(im, flow)
+
+    im1_cuda = im1_cuda.permute(0, 2, 3, 1)[0]
+    res = im1_cuda.cpu().numpy()
+    return res[:, :, 0]
+
     res = np.zeros((h, w), dtype=np.float32)
     uindex = np.repeat( np.arange(w, dtype=float)[np.newaxis, :], h, axis=0 )
     vindex = np.repeat( np.arange(h, dtype=float)[:, np.newaxis], w, axis=1 )
