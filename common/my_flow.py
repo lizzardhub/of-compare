@@ -238,20 +238,23 @@ def warp(x, flow):
 from Forward_Warp import forward_warp
 
 def warpforw(flow): # flow.shape = (h, w, 2)
+    # Using https://github.com/lizhihao6/Forward-Warp
     h, w = flow.shape[:2]
-    # flow = flow[np.newaxis, :, :, :]
-    # im = np.ones((1, h, w, 1))
-    # im = torch.FloatTensor(im).permute(0, 3, 1, 2)
-    # flow = torch.FloatTensor(flow)
-    #
-    # fw = forward_warp()
-    # im = im.cuda()
-    # flow = flow.cuda()
-    # im1_cuda = fw(im, flow)
-    #
-    # im1_cuda = im1_cuda.permute(0, 2, 3, 1)[0]
-    # res = im1_cuda.cpu().numpy()
-    # return res[:, :, 0]
+    flow = flow[np.newaxis, :, :, :]
+    im = np.ones((1, h, w, 1))
+    im = torch.FloatTensor(im).permute(0, 3, 1, 2)
+    flow = torch.FloatTensor(flow)
+
+    fw = forward_warp()
+    im = im.cuda()
+    flow = flow.cuda()
+    im1_cuda = fw(im, flow)
+
+    im1_cuda = im1_cuda.permute(0, 2, 3, 1)[0]
+    res = im1_cuda.cpu().numpy()
+    return res[:, :, 0]
+
+    # END
 
     res = np.zeros((h, w), dtype=np.float32)
     uindex = np.repeat( np.arange(w, dtype=float)[np.newaxis, :], h, axis=0 )
