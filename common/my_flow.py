@@ -235,7 +235,7 @@ def warp(x, flow):
 
     return np.nan_to_num((x_warp * mask).transpose(1, 2).transpose(2, 3).numpy()[0])
 
-if 0:
+if 1:
     from Forward_Warp import forward_warp
 
     def warpforw(flow): # flow.shape = (h, w, 2)

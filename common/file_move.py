@@ -156,6 +156,8 @@ def flow_metrics(stereo=False):
                 if meth != 2:
                     meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
                     max_rad_me = max(max_rad_me, meth_max)
+
+        common_photo = confident_photo(img1, img2, flows[1:], flows_b[1:])
         for meth in range(1, 4):
             if (res_path[meth] / filename).exists():
                 flow = flows[meth]
@@ -167,11 +169,11 @@ def flow_metrics(stereo=False):
                 #flow_grad = grad_sum(flow)
 
                 photo = photometric_diff(img1, img2_warped)
-                lrc = occlusion_area(flow, b_warped)
+                #lrc = occlusion_area(flow, b_warped)
                 precision = occ_precision(flow, flow_b)
 
                 metrics_history[meth, 0, i] = photo
-                metrics_history[meth, 1, i] = lrc
+                metrics_history[meth, 1, i] = common_photo[meth - 1]
                 metrics_history[meth, 2, i] = precision
 
                 res_canvas[meth][...] = load_and_caption( # IMPORTANT: flow_to_png_middlebury
