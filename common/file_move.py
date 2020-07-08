@@ -34,14 +34,14 @@ def vis(im1, im2, fwd, bwd, meth_str):
     io.imsave(meth_str + 'im2.jpg', im2, quality=100)
 
     # Read forward
-    flow_f = read_flo(fwd)
+    flow_f = fwd
     if method == 'me-disp':
         flow_f /= 4
     img = flow_to_png_middlebury(flow_f, rad_clip=25)
     io.imsave(meth_str + 'fw.jpg', img, quality=100)
 
     # Read backward
-    flow_b = read_flo(bwd)
+    flow_b = bwd
     if method == 'me-disp':
         flow_b /= 4
     img = flow_to_png_middlebury(flow_b, rad_clip=25)
