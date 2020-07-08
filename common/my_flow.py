@@ -239,7 +239,7 @@ from Forward_Warp import forward_warp
 
 def warpforw(flow): # flow.shape = (h, w, 2)
     h, w = flow.shape[:2]
-    flow = [np.newaxis, :, :, :]
+    flow = flow[np.newaxis, :, :, :]
     im = np.ones((1, h, w, 1))
     im = torch.FloatTensor(im).permute(0, 3, 1, 2)
 
