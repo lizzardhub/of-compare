@@ -152,10 +152,13 @@ def flow_metrics(stereo=False):
                 flows_b[meth] = read_flo(res_path[meth] / filename_b) # IMPORTANT: read_flo
                 if meth == 2:
                     flows[meth] /= 4
-                    flows_b[meth] /=4
+                    flows_b[meth] /= 4
                 if meth != 2:
                     meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
                     max_rad_me = max(max_rad_me, meth_max)
+            else:
+                flows[meth] = np.zeros((h, w, 2))
+                flows_b[meth] = np.zeros((h, w, 2))
 
         common_photo = confident_photo(img1, img2, flows[1:], flows_b[1:])
         for meth in range(1, 4):
