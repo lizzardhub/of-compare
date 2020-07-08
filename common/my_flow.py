@@ -353,7 +353,6 @@ def confident_photo(im1, im2, flows_f, flows_b):
         THR = 1
         confidence = mag < THR
         conf_intersect *= confidence
-    show(conf_intersect)
     metric = np.zeros((n))
     for i in range(n):
         flow_f = flows_f[i]

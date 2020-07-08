@@ -178,7 +178,8 @@ def flow_metrics(stereo=False):
 
                 res_canvas[meth][...] = load_and_caption( # IMPORTANT: flow_to_png_middlebury
                         flow_to_png_middlebury(flow, rad_clip=max_rad_me), caption[meth])
-                vis(img1, img2, flow, flow_b, caption[meth] + '_')
+                if i == len(img_list) // 2:
+                    vis(img1, img2, flow, flow_b, caption[meth] + '_')
 
         rate = 1
         img = img.astype(np.uint8)
