@@ -35,15 +35,15 @@ def vis(im1, im2, fwd, bwd, meth_str):
 
     # Read forward
     flow_f = fwd
-    if method == 'me-disp':
-        flow_f /= 4
+    #if method == 'me-disp':
+    #    flow_f /= 4
     img = flow_to_png_middlebury(flow_f, rad_clip=25)
     io.imsave(meth_str + 'fw.jpg', img, quality=100)
 
     # Read backward
     flow_b = bwd
-    if method == 'me-disp':
-        flow_b /= 4
+    #if method == 'me-disp':
+    #    flow_b /= 4
     img = flow_to_png_middlebury(flow_b, rad_clip=25)
     io.imsave(meth_str + 'bw.jpg', img, quality=100)
 
@@ -150,6 +150,9 @@ def flow_metrics(stereo=False):
             if (res_path[meth] / filename).exists(): # Flow file with the image name?
                 flows[meth] = read_flo(res_path[meth] / filename) # IMPORTANT: read_flo
                 flows_b[meth] = read_flo(res_path[meth] / filename_b) # IMPORTANT: read_flo
+                if meth == 2:
+                    flows[meth] /= 4
+                    flows_b[meth] /=4
                 if meth != 2:
                     meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
                     max_rad_me = max(max_rad_me, meth_max)
