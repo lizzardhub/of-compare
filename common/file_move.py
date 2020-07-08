@@ -23,6 +23,58 @@ def frame_ffmpeg_split_stereo():
     subp_run_str(['ffmpeg -i cur_video.mkv -qscale:v 2 frames_l/frame_%04d.jpg']) # Split video into frames
     subp_run_str(['ffmpeg -i cur_video2.mkv -qscale:v 2 frames_r/frame_%04d.jpg']) # Split video into frames
 
+def vis(im1, im2, fwd, bwd, meth_str):
+    #fwd = fwp
+    #bwd = bwp
+    #im1 = io.imread(im1p)
+    #im2 = io.imread(im2p)
+    h, w = im1.shape[:2]
+
+    io.imsave(meth_str + 'im1.jpg', im1, quality=100)
+    io.imsave(meth_str + 'im2.jpg', im2, quality=100)
+
+    # Read forward
+    flow_f = read_flo(fwd)
+    if method == 'me-disp':
+        flow_f /= 4
+    img = flow_to_png_middlebury(flow_f, rad_clip=25)
+    io.imsave(meth_str + 'fw.jpg', img, quality=100)
+
+    # Read backward
+    flow_b = read_flo(bwd)
+    if method == 'me-disp':
+        flow_b /= 4
+    img = flow_to_png_middlebury(flow_b, rad_clip=25)
+    io.imsave(meth_str + 'bw.jpg', img, quality=100)
+
+    # Warp
+    im2_warped = backwarp(im2, flow_f)
+    io.imsave(meth_str + 'im2w.jpg', im2_warped.astype(np.uint8), quality=100)
+
+
+    # FORWARD WARPING
+    wf = warpforw(flow_f)
+    wb = warpforw(flow_b)
+    wb_crit = wb < 0.95
+
+    # Consistency error
+    b_warped = backwarp(flow_b, flow_f) # -> forward occlusions (closure areas)
+    res = b_warped + flow_f
+    mag = np.sqrt(res[:, :, 0] ** 2 + res[:, :, 1] ** 2)
+
+    MIN_ERR = 0.5
+    MAX_ERR = 5
+    lrc_crit = np.clip((mag - MIN_ERR) / (MAX_ERR - MIN_ERR), 0, 1)
+
+    img = np.repeat((wb_crit*0.5)[:, :, np.newaxis], 3, axis=2) + im1/255*0.5
+    io.imsave(meth_str + 'wb.jpg', img, quality=100)
+
+    img = np.repeat((lrc_crit*0.5)[:, :, np.newaxis], 3, axis=2) + im1/255*0.5
+    io.imsave(meth_str + 'lrc.jpg', img, quality=100)
+
+    lrc_crit[wb_crit] = 0
+    prec_metric = np.sum(lrc_crit) / (h * w)
+
 # Join outputs of neuronets
 def load_and_caption(in_image, text):
     # Returns RGB image
@@ -74,7 +126,7 @@ def flow_metrics(stereo=False):
         print(i, end=' ')
         if i % 10 == 0:
             print()
-        fimg1 = img_list[i]
+        fimg1 = input_path / Path(img_list[i]).name
         fname1 = Path(fimg1.name)
 
         img = np.zeros((h * 2, w * 2, 3))
@@ -111,23 +163,17 @@ def flow_metrics(stereo=False):
                 #diff = photometric_diff(img1, img2, flow)
                 #flow_grad = grad_sum(flow)
 
-                weighted_flow_grad = weighted_grad_sum(img1, flow)
+                photo = photometric_diff(img1, img2_warped)
                 lrc = occlusion_area(flow, b_warped)
-                lrc_photo = lrc_weighted_photo(img1, flow, b_warped, img2_warped)
+                precision = occ_precision(flow, flow_b)
 
-                metrics_history[meth, 0, i] = weighted_flow_grad
+                metrics_history[meth, 0, i] = photo
                 metrics_history[meth, 1, i] = lrc
-                metrics_history[meth, 2, i] = lrc_photo
+                metrics_history[meth, 2, i] = precision
 
                 res_canvas[meth][...] = load_and_caption( # IMPORTANT: flow_to_png_middlebury
                         flow_to_png_middlebury(flow, rad_clip=max_rad_me), caption[meth])
-        #elif mode == 1: # Warp
-        #    filename = filename.split('.')[0] + '.flo'
-        #    if filename in selflow_images:
-        #        flow = read_flo(selflow_path + '/' + filename)
-        #        diff = round(photometric_diff(img1, img2, flow), 3)
-        #        img[h:h * 2, :w, :] = load_and_caption(
-        #                warp(img2, flow), caption[1] + ' ' + str(diff))
+                vis(img1, img2, flow, flow_b, caption[meth] + '_')
 
         rate = 1
         img = img.astype(np.uint8)

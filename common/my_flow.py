@@ -314,6 +314,43 @@ def lrc_weighted_photo(im1, flow_f, b_warped, im2_warped):
     euclidian_dist = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
     return np.sum(euclidian_dist * res) / (im1.shape[0] * im1.shape[1])
 
+def occ_precision(flow_f, flow_b):
+    h, w = flow_f.shape[:2]
+    wf = warpforw(flow_f)
+    #wb = warpforw(flow_b)
+
+    # Forward - closure areas on first frame
+    wb_crit = wb < 0.95
+
+    b_warped = backwarp(flow_b, flow_f)
+    res = b_warped + flow_f
+    mag = np.sqrt(res[:, :, 0] ** 2 + res[:, :, 1] ** 2)
+
+    MIN_ERR = 0.5
+    MAX_ERR = 5
+    lrc_crit = np.clip((mag - MIN_ERR) / (MAX_ERR - MIN_ERR), 0, 1)
+
+    lrc_crit[wb_crit] = 0
+    prec_metric = np.sum(lrc_crit) / (h * w)
+    #print('Metric:', prec_metric * 100)
+
+    # Backward - closure areas on second frame
+    #wb_crit = wf < 0.95
+
+    #b_warped = backwarp(flow_f, flow_b)
+    #res = b_warped + flow_b
+    #mag = np.sqrt(res[:, :, 0] ** 2 + res[:, :, 1] ** 2)
+
+    #MIN_ERR = 0.5
+    #MAX_ERR = 5
+    #lrc_crit = np.clip((mag - MIN_ERR) / (MAX_ERR - MIN_ERR), 0, 1)
+
+    #lrc_crit[wb_crit] = 0
+
+    # Sum both occlusions
+    #prec_metric += np.sum(lrc_crit) / (h * w)
+    #print('Metric:', prec_metric * 100)
+    return prec_metric * 100
 
 
 '''def weight_sum(flow, img):
