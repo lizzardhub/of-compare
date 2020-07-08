@@ -335,7 +335,7 @@ def lrc_weighted_photo(im1, flow_f, b_warped, im2_warped):
 
 def occ_precision(flow_f, flow_b):
     h, w = flow_f.shape[:2]
-    #wf = warpforw(flow_f)
+    wf = warpforw(flow_f)
     wb = warpforw(flow_b)
 
     # Forward - closure areas on first frame
@@ -354,22 +354,22 @@ def occ_precision(flow_f, flow_b):
     #print('Metric:', prec_metric * 100)
 
     # Backward - closure areas on second frame
-    #wb_crit = wf < 0.95
+    wb_crit = wf < 0.95
 
-    #b_warped = backwarp(flow_f, flow_b)
-    #res = b_warped + flow_b
-    #mag = np.sqrt(res[:, :, 0] ** 2 + res[:, :, 1] ** 2)
+    b_warped = backwarp(flow_f, flow_b)
+    res = b_warped + flow_b
+    mag = np.sqrt(res[:, :, 0] ** 2 + res[:, :, 1] ** 2)
 
-    #MIN_ERR = 0.5
-    #MAX_ERR = 5
-    #lrc_crit = np.clip((mag - MIN_ERR) / (MAX_ERR - MIN_ERR), 0, 1)
+    MIN_ERR = 0.5
+    MAX_ERR = 5
+    lrc_crit = np.clip((mag - MIN_ERR) / (MAX_ERR - MIN_ERR), 0, 1)
 
-    #lrc_crit[wb_crit] = 0
+    lrc_crit[wb_crit] = 0
 
-    # Sum both occlusions
-    #prec_metric += np.sum(lrc_crit) / (h * w)
+    Sum both occlusions
+    prec_metric += np.sum(lrc_crit) / (h * w)
     #print('Metric:', prec_metric * 100)
-    return prec_metric * 100
+    return prec_metric / 2 * 100
 
 
 '''def weight_sum(flow, img):
@@ -494,7 +494,7 @@ def split_frames(stereo=False):
     print("Hello!")
     max_area = 1240 * 436 # A Sintel-sized frame
 
-    # Move from frames_l and frames_r to frames
+    # Disparity. Move from frames_l and frames_r to frames
     files_l = sorted(glob('frames_l/*'))
     files_r = sorted(glob('frames_r/*'))
     for i in range( 100, min(101, len(files_l)) ): # 3, 8 * 24
@@ -505,10 +505,11 @@ def split_frames(stereo=False):
 
     # Process all frames
     for i, filepath in enumerate(sorted(glob('frames/*'))):
-        if i >= 1000:
-            os.remove(filepath)
-            continue
-        if not stereo:
+        if stereo: # Stereo
+            if i >= 1000:
+                os.remove(filepath)
+                continue
+        else: # Mono
             if i < 100 or i >= 102:
                 os.remove(filepath)
                 continue

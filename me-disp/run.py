@@ -57,7 +57,7 @@ if max_w < w: max_w += 16
 
 processor = DE(max_w, max_h)
 
-for i in range(0, len(image_list) - 1):
+for i in range(0, len(image_list) - 1, 2):
     fname = image_list[i].split('/')[-1]
     img_l = io.imread(image_list[i])
     img_r = io.imread(image_list[i + 1])
