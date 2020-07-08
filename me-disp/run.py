@@ -42,7 +42,9 @@ def estimate_disp(processor, img_l, img_r):
     f = processor.GetDisparityMap()
     u, v = f[0][0], f[0][1]
     flow = np.stack([u, v], axis=2).astype(np.float32)
-    return flow
+    u, v = f[1][0], f[1][1]
+    flow_b = np.stack([u, v], axis=2).astype(np.float32)
+    return (flow, flow_b)
 
 image_list = sorted(glob('/content/frames/*'))
 img_l = io.imread(image_list[0]) # Fake read to determine dimensions
@@ -67,13 +69,14 @@ for i in range(0, len(image_list) - 1, 2):
     img_r = cv2.resize(img_r,(max_w, max_h))
 
     tb = time()
-    flow = estimate_disp(processor, img_l, img_r)
+    flow, flow_b = estimate_disp(processor, img_l, img_r)
     flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '.flo')
     print('{:.3f} seconds elapsed'.format(time() - tb))
 
     tb = time()
-    flow = estimate_disp(processor, img_r, img_l)
+    #flow = estimate_disp(processor, img_r, img_l)
+    flow = flow_b
     flow = cv2.resize(flow, (w, h))
     write_flow(flow, './images/out/' + fname.split('.')[0] + '_b.flo')
     print('{:.3f} seconds elapsed'.format(time() - tb))
