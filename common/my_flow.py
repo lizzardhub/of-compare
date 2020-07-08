@@ -242,9 +242,10 @@ def warpforw(flow): # flow.shape = (h, w, 2)
     flow = flow[np.newaxis, :, :, :]
     im = np.ones((1, h, w, 1))
     im = torch.FloatTensor(im).permute(0, 3, 1, 2)
+    flow = torch.FloatTensor(flow)
 
     fw = forward_warp()
-    im = im0.cuda()
+    im = im.cuda()
     flow = flow.cuda()
     im1_cuda = fw(im, flow)
 
