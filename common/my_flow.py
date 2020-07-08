@@ -316,8 +316,8 @@ def lrc_weighted_photo(im1, flow_f, b_warped, im2_warped):
 
 def occ_precision(flow_f, flow_b):
     h, w = flow_f.shape[:2]
-    wf = warpforw(flow_f)
-    #wb = warpforw(flow_b)
+    #wf = warpforw(flow_f)
+    wb = warpforw(flow_b)
 
     # Forward - closure areas on first frame
     wb_crit = wb < 0.95
