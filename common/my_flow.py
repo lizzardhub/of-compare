@@ -5,8 +5,8 @@ import cv2
 TAG_CHAR = np.array([202021.25], np.float32)
 UNKNOWN_FLOW_THRESH = 1e7
 
-random.seed(datetime.now())
-np.random.seed(0)
+#random.seed(datetime.now())
+#np.random.seed(0)
 
 
 def flow_to_png(flow_map, max_value=None):
@@ -444,6 +444,8 @@ def perlin_noise(shape, scale):
     return noise[:shape[0], :shape[1]]
 
 def distortion(img, params=[]):
+    random.seed(np.sum(img[0, 0, :]))
+    np.random.seed(np.sum(img[0, 0, :]))
     if not params: # Generate random parameters
         #mode = random.randrange(0, 3)
         mode = 0
