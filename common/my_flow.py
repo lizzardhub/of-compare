@@ -460,9 +460,10 @@ def distortion(img, params=[]):
         if pass_params:
             sigma = params[1]
         else:
-            sigma = 1.5 + random.random() * 2
+            sigma = 1 + random.random() * 1
             params.append(sigma)
         #img = filters.gaussian(img, sigma=sigma)
+        img = img * 255 # Img is in range [0, 1]
         pil_img = Image.fromarray(img.astype(np.uint8))
         im1 = pil_img.filter(ImageFilter.GaussianBlur(radius=sigma))
         img = np.array(im1)
