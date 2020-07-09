@@ -457,7 +457,7 @@ def distortion(img, params=[]):
         if pass_params:
             sigma = params[1]
         else:
-            sigma = 1.5 + random.random() * 1.5
+            sigma = 1.5 + random.random() * 2
             params.append(sigma)
         #img = filters.gaussian(img, sigma=sigma)
         pil_img = Image.fromarray(img.astype(np.uint8))
