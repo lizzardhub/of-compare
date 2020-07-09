@@ -446,7 +446,7 @@ def perlin_noise(shape, scale):
 def distortion(img, params=[]):
     if not params: # Generate random parameters
         #mode = random.randrange(0, 3)
-        mode = 2
+        mode = 0
         params.append(mode)
         pass_params = False
     else: # Use passed in parameters
