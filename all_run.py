@@ -10,7 +10,7 @@ disp = True
 
 #lst = sorted(glob('vids/*_l*'))
 #for i in [1, 11, 15, 20, 24, 25, 38, 82]:
-for id in ['01_l4', '05_l4', '06_l1', '06_l2', '06_l3', '06_l4']:
+for id in ['01_l4', '05_l4', '06_l1', '06_l2', '06_l3', '06_l4', '07_l4', '08_l0']:
 #for video_path in sorted(glob('vids/*_l*'))[START_IDX:STOP_IDX]:
     #video_path = lst[i]
     video_path = 'vids/' + id + '.mkv'
