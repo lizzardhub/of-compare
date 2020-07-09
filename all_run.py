@@ -10,10 +10,10 @@ disp = True
 
 #lst = sorted(glob('vids/*_l*'))
 #for i in [1, 11, 15, 20, 24, 25, 38, 82]:
-for id in ['12_l0']:
-#for video_path in sorted(glob('vids/*_l*'))[START_IDX:STOP_IDX]:
+#for id in ['12_l0']:
+for video_path in sorted(glob('vids/*_l*'))[START_IDX:STOP_IDX]:
     #video_path = lst[i]
-    video_path = 'vids/' + id + '.mkv'
+    #video_path = 'vids/' + id + '.mkv'
     # OPTICAL FLOW
 
     # Copy video
