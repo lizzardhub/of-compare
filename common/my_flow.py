@@ -467,11 +467,12 @@ def distortion(img, params=[]):
         im1 = pil_img.filter(ImageFilter.GaussianBlur(radius=sigma))
         img = np.array(im1)
         return (img, params)
-    elif mode == 1: # Perlin noise. params = [1, scale, intensity, random_noises]
+    elif mode == 1: # Perlin noise. params = [1, scale, intensity, random_noises, random_fix]
         if pass_params:
             scale = params[1]
             intensity = params[2]
             random_noises = params[3]
+            random_fix = params[4]
         else:
             if random.randrange(0, 2) == 0:
                 scale = 8 # Large spots
@@ -482,12 +483,14 @@ def distortion(img, params=[]):
             random_noises = [0] * 15
             for i in range(15):
                 random_noises[i] = perlin_noise(img.shape, scale) * intensity
+            random_fix = seed
 
             params.append(scale)
             params.append(intensity)
             params.append(random_noises)
+            params.append(random_fix)
         if scale == 8:
-            np.random.seed(0)
+            np.random.seed(random_fix)
         noise = random_noises[np.random.randint(15)]
         img[:, :, 0] += noise
         noise = random_noises[np.random.randint(15)]
