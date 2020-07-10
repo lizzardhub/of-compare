@@ -177,11 +177,13 @@ def read_flo(filename):
 
 # *** New functions
 
-backwarp_tenGrid = {}
-backwarp_tenPartial = {}
-
 def backwarp(tenInput, tenFlow):
     # From Simon Niklaus: https://github.com/sniklaus/pytorch-pwc
+    tenInput = tenInput.copy()
+    tenFlow = tenFlow.copy()
+
+    backwarp_tenGrid = {}
+    backwarp_tenPartial = {}
 
     tenInput = torch.from_numpy(tenInput[np.newaxis, ...].astype(np.float32)).transpose(2, 3).transpose(1, 2)
     tenFlow = torch.from_numpy(tenFlow[np.newaxis, ...]).transpose(2, 3).transpose(1, 2)
@@ -240,6 +242,8 @@ if 1:
 
     def warpforw(flow): # flow.shape = (h, w, 2)
         # Using https://github.com/lizhihao6/Forward-Warp
+        flow = flow.copy()
+
         h, w = flow.shape[:2]
         flow = flow[np.newaxis, :, :, :]
         im = np.ones((1, h, w, 1))
