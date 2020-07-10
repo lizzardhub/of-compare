@@ -153,9 +153,9 @@ def flow_metrics(stereo=False):
                 if meth == 2:
                     flows[meth] /= 4
                     flows_b[meth] /= 4
-                if meth == 3:
-                    meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
-                    max_rad_me = min(max_rad_me, meth_max)
+                
+                meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
+                max_rad_me = min(max_rad_me, meth_max)
             else:
                 flows[meth] = np.zeros((h, w, 2), dtype=np.float32)
                 flows_b[meth] = np.zeros((h, w, 2), dtype=np.float32)
