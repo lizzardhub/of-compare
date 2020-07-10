@@ -145,7 +145,7 @@ def flow_metrics(stereo=False):
         filename_b = Path(fname1.stem + '_b').with_suffix('.flo')
         flows = [0] * 4
         flows_b = [0] * 4
-        max_rad_me = 0
+        max_rad_me = 1000
         for meth in range(1, 4): # Pre-calculate maximum flow
             if (res_path[meth] / filename).exists(): # Flow file with the image name?
                 flows[meth] = read_flo(res_path[meth] / filename) # IMPORTANT: read_flo
@@ -155,7 +155,7 @@ def flow_metrics(stereo=False):
                     flows_b[meth] /= 4
                 if meth == 3:
                     meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
-                    max_rad_me = max(max_rad_me, meth_max)
+                    max_rad_me = min(max_rad_me, meth_max)
             else:
                 flows[meth] = np.zeros((h, w, 2), dtype=np.float32)
                 flows_b[meth] = np.zeros((h, w, 2), dtype=np.float32)
