@@ -448,7 +448,7 @@ def perlin_noise(shape, scale):
     return noise[:shape[0], :shape[1]]
 
 def distortion(img, params=[]):
-    seed = int(np.sum(img[0, 0, :]) * 255)
+    seed = int(np.sum(img) * 255)
     random.seed(seed)
     np.random.seed(seed)
     if not params: # Generate random parameters
