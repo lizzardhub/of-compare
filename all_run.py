@@ -13,7 +13,7 @@ disp = True
 for id in ['15_l4', '19_l0', '19_l1', '19_l2', '19_l3', '19_l4', '20_l0', '20_l1', '20_l2', '20_l3', '20_l4']:
 #for video_path in sorted(glob('vids/*_l*'))[START_IDX:STOP_IDX]:
     #video_path = lst[i]
-    #video_path = 'vids/' + id + '.mkv'
+    video_path = 'vids/' + id + '.mkv'
     # OPTICAL FLOW
 
     # Copy video
