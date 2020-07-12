@@ -153,7 +153,7 @@ def flow_metrics(stereo=False):
                 if meth == 2:
                     flows[meth] /= 4
                     flows_b[meth] /= 4
-                
+
                 meth_max = np.max( np.sqrt(flows[meth][:, :, 0] ** 2 + flows[meth][:, :, 1] ** 2) )
                 max_rad_me = min(max_rad_me, meth_max)
             else:
@@ -181,8 +181,8 @@ def flow_metrics(stereo=False):
 
                 res_canvas[meth][...] = load_and_caption( # IMPORTANT: flow_to_png_middlebury
                         flow_to_png_middlebury(flow, rad_clip=max_rad_me), caption[meth])
-                if i == (len(img_list) // 2) // step * step: # So that stereo frames also getcopied
-                    vis(img1, img2, flow, flow_b, caption[meth] + '_')
+                #if i == (len(img_list) // 2) // step * step: # So that stereo frames also getcopied
+                #    vis(img1, img2, flow, flow_b, caption[meth] + '_')
 
         rate = 1
         img = img.astype(np.uint8)

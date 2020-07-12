@@ -453,7 +453,7 @@ def distortion(img, params=[]):
     np.random.seed(seed)
     if not params: # Generate random parameters
         #mode = random.randrange(0, 3)
-        mode = 1
+        mode = 2
         params.append(mode)
         pass_params = False
     else: # Use passed in parameters
@@ -538,7 +538,7 @@ def split_frames(stereo=False):
     # Disparity. Move from frames_l and frames_r to frames
     files_l = sorted(glob('frames_l/*'))
     files_r = sorted(glob('frames_r/*'))
-    for i in range( 3, min(8 * 24, len(files_l)) ): # 3, 8 * 24 or 100, 101
+    for i in range( 100, min(101, len(files_l)) ): # 3, 8 * 24 or 100, 101
         target_fname_l = 'frames/frame_' + str(i * 2 + 1).zfill(4) + '.jpg'
         target_fname_r = 'frames/frame_' + str(i * 2 + 2).zfill(4) + '.jpg'
         shutil.copy(files_l[i], target_fname_l)
@@ -551,7 +551,7 @@ def split_frames(stereo=False):
                 os.remove(filepath)
                 continue
         else: # Mono
-            if i < 3 or i >= 8 * 24:
+            if i < 100 or i >= 101:
                 os.remove(filepath)
                 continue
 
