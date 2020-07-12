@@ -303,6 +303,49 @@ if 1:
 
         return res
 
+def warpforw_cpu(flow): # flow.shape = (h, w, 2)
+    res = np.zeros((h, w), dtype=np.float32)
+    uindex = np.repeat( np.arange(w, dtype=float)[np.newaxis, :], h, axis=0 )
+    vindex = np.repeat( np.arange(h, dtype=float)[:, np.newaxis], w, axis=1 )
+    uindex += flow[:, :, 0] # Get indexes instead of displacement vectors
+    vindex += flow[:, :, 1]
+
+    for y in range(2): # Vertical
+        nv = None # Select floor or ceil nearest integer point
+        if y == 0:
+            nv = np.floor(vindex)
+        else:
+            nv = np.ceil(vindex)
+        nvint = nv.astype(int) # nv is float, just convert type
+
+        vfrac = 1 - np.abs(vindex - nv) # Contribution to the point
+        vmask = (nvint < 0) | (nvint >= h) # Pixels that fly out of frame
+        if y == 1:
+            vmask = vmask | (vfrac == 1) # Avoid duplication if integer coor
+        nvint[vmask] = 0 # Easy way of removing contribution:)
+        vfrac[vmask] = 0
+
+        for x in range(2): # Horizontal, code is same as vertical
+            nu = None
+            if x == 0:
+                nu = np.floor(uindex)
+            else:
+                nu = np.ceil(uindex)
+            nuint = nu.astype(int)
+
+            ufrac = 1 - np.abs(uindex - nu)
+            umask = (nuint < 0) | (nuint >= w)
+            if x == 1:
+                umask = umask | (ufrac == 1)
+            nuint[umask] = 0
+            ufrac[umask] = 0
+
+            # Avoid "race condition" during addition
+            # https://jakevdp.github.io/PythonDataScienceHandbook/02.07-fancy-indexing.html
+            np.add.at(res, (nvint, nuint), vfrac * ufrac)
+
+    return res
+
 def photometric_diff(im1, im2_warped):
     euclidian_dist = np.sqrt( np.sum(np.square(im1 - im2_warped), axis=2) )
     return np.sum(euclidian_dist) / (im1.shape[0] * im1.shape[1])
