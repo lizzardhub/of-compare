@@ -584,7 +584,7 @@ def split_frames(stereo=False):
     # Disparity. Move from frames_l and frames_r to frames
     files_l = sorted(glob('frames_l/*'))
     files_r = sorted(glob('frames_r/*'))
-    for i in range( 100, min(102, len(files_l)) ): # 3, 8 * 24 or 100, 102
+    for i in range( 100, min(101, len(files_l)) ): # 3, 8 * 24 or 100, 101
         target_fname_l = 'frames/frame_' + str(i * 2 + 1).zfill(4) + '.jpg'
         target_fname_r = 'frames/frame_' + str(i * 2 + 2).zfill(4) + '.jpg'
         shutil.copy(files_l[i], target_fname_l)
