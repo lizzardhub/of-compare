@@ -304,6 +304,9 @@ if 0:
         return res
 
 def warpforw_cpu(flow): # flow.shape = (h, w, 2)
+    flow = flow.copy()
+
+    h, w = flow.shape[:2]
     res = np.zeros((h, w), dtype=np.float32)
     uindex = np.repeat( np.arange(w, dtype=float)[np.newaxis, :], h, axis=0 )
     vindex = np.repeat( np.arange(h, dtype=float)[:, np.newaxis], w, axis=1 )
