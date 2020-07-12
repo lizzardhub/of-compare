@@ -29,7 +29,7 @@ for id in ['07_l2', '11_l3', '01_l3', '04_l0', '13_l0']:
         shutil.rmtree(video_id)
         os.mkdir(video_id)
 
-    subp_bash('mkdir -p ' + video_id + '/{mono,irr,pwc,me,stereo,irr-disp,pwc-disp,me-disp}') # Debug
+    #subp_bash('mkdir -p ' + video_id + '/{mono,irr,pwc,me,stereo,irr-disp,pwc-disp,me-disp}') # Debug
     subp_bash('mkdir -p ' + video_id + '/{mono,stereo}')
 
     if optical_flow:
@@ -51,10 +51,10 @@ for id in ['07_l2', '11_l3', '01_l3', '04_l0', '13_l0']:
         subp_bash('mv *.jpg ' + video_id + '/mono/') # Debug
 
 
-        subp_run_str('cp frames/* ' + video_id + '/mono') # Debug
-        subp_run_str('cp sintelall/MPI-Sintel-complete/training/frames/out/* ' + video_id + '/irr')
-        subp_run_str('cp pwc/images/out/* ' + video_id + '/pwc')
-        subp_run_str('cp me/images/out/* ' + video_id + '/me')
+        #subp_run_str('cp frames/* ' + video_id + '/mono') # Debug
+        #subp_run_str('cp sintelall/MPI-Sintel-complete/training/frames/out/* ' + video_id + '/irr')
+        #subp_run_str('cp pwc/images/out/* ' + video_id + '/pwc')
+        #subp_run_str('cp me/images/out/* ' + video_id + '/me')
     if disp:
         # Swap flow and disparity folders
         #subp_run_str('mv selflow selflow-of')
@@ -96,10 +96,10 @@ for id in ['07_l2', '11_l3', '01_l3', '04_l0', '13_l0']:
         subp_run_str('mv metrics.txt ' + video_id + '/disp.txt')
         subp_bash('mv *.jpg ' + video_id + '/stereo/') # Debug
 
-        subp_run_str('cp frames/* ' + video_id + '/stereo') # Debug
-        subp_run_str('cp sintelall/MPI-Sintel-complete/training/frames/out/* ' + video_id + '/irr-disp')
-        subp_run_str('cp pwc/images/out/* ' + video_id + '/pwc-disp')
-        subp_run_str('cp me/images/out/* ' + video_id + '/me-disp')
+        #subp_run_str('cp frames/* ' + video_id + '/stereo') # Debug
+        #subp_run_str('cp sintelall/MPI-Sintel-complete/training/frames/out/* ' + video_id + '/irr-disp')
+        #subp_run_str('cp pwc/images/out/* ' + video_id + '/pwc-disp')
+        #subp_run_str('cp me/images/out/* ' + video_id + '/me-disp')
 
         # Swap flow and disparity folders again
         #subp_run_str('mv selflow selflow-disp')

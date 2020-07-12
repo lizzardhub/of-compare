@@ -66,10 +66,14 @@ def vis(im1, im2, fwd, bwd, meth_str):
     MAX_ERR = 5
     lrc_crit = np.clip((mag - MIN_ERR) / (MAX_ERR - MIN_ERR), 0, 1)
 
-    img = np.repeat((wb_crit*0.5)[:, :, np.newaxis], 3, axis=2) + im1/255*0.5
+    mask = np.zeros((h, w, 3))
+    mask[:, :, 0] = wb_crit*4
+    img = im1 / 255 * 0.5 + mask * 0.5
     io.imsave(meth_str + 'wb.jpg', img, quality=100)
 
-    img = np.repeat((lrc_crit*0.5)[:, :, np.newaxis], 3, axis=2) + im1/255*0.5
+    mask = np.zeros((h, w, 3))
+    mask[:, :, 0] = lrc_crit*4
+    img = im1 / 255 * 0.5 + mask * 0.5
     io.imsave(meth_str + 'lrc.jpg', img, quality=100)
 
     lrc_crit[wb_crit] = 0
@@ -182,7 +186,7 @@ def flow_metrics(stereo=False):
                 res_canvas[meth][...] = load_and_caption( # IMPORTANT: flow_to_png_middlebury
                         flow_to_png_middlebury(flow, rad_clip=max_rad_me), caption[meth])
                 #if i == (len(img_list) // 2) // step * step: # So that stereo frames also getcopied
-                #    vis(img1, img2, flow, flow_b, caption[meth] + '_')
+                vis(img1, img2, flow, flow_b, caption[meth] + '_')
 
         rate = 1
         img = img.astype(np.uint8)
