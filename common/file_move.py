@@ -186,7 +186,7 @@ def flow_metrics(stereo=False):
                 res_canvas[meth][...] = load_and_caption( # IMPORTANT: flow_to_png_middlebury
                         flow_to_png_middlebury(flow, rad_clip=max_rad_me), caption[meth])
                 #if i == (len(img_list) // 2) // step * step: # So that stereo frames also getcopied
-                vis(img1, img2, flow, flow_b, caption[meth] + '_')
+                vis(img1, img2, flow, flow_b, caption[meth] + '_' + str(i).zfill(4) + '_')
 
         rate = 1
         img = img.astype(np.uint8)
