@@ -499,7 +499,7 @@ def distortion(img, params=[]):
     np.random.seed(seed)
     if not params: # Generate random parameters
         #mode = random.randrange(0, 3)
-        mode = 2
+        mode = 1
         params.append(mode)
         pass_params = False
     else: # Use passed in parameters
