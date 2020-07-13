@@ -584,11 +584,16 @@ def split_frames(stereo=False):
     # Disparity. Move from frames_l and frames_r to frames
     files_l = sorted(glob('frames_l/*'))
     files_r = sorted(glob('frames_r/*'))
-    for i in range( 100, min(101, len(files_l)) ): # 3, 8 * 24 or 100, 101
+    for i in range( 3, min(101, len(files_l)), 15 ): # 3, 8 * 24 or 100, 101
         target_fname_l = 'frames/frame_' + str(i * 2 + 1).zfill(4) + '.jpg'
         target_fname_r = 'frames/frame_' + str(i * 2 + 2).zfill(4) + '.jpg'
         shutil.copy(files_l[i], target_fname_l)
         shutil.copy(files_r[i], target_fname_r)
+
+    mono_list = []
+    for i in range(3, 101, 15):
+        mono_list.append(i)
+        mono_list.append(i + 1)
 
     # Process all frames
     for i, filepath in enumerate(sorted(glob('frames/*'))):
@@ -597,7 +602,7 @@ def split_frames(stereo=False):
                 os.remove(filepath)
                 continue
         else: # Mono
-            if i < 100 or i >= 102:
+            if i < 3 or i >= 102 or not i in mono_list:
                 os.remove(filepath)
                 continue
 
