@@ -16,10 +16,16 @@ from common.utils.flowlib import read_flow, flow_to_image, write_flow
 
 from common.my_flow import *
 
+def w2b(img):
+    c1 = img[:, :, 0] == 1
+    c2 = img[:, :, 1] == 1
+    c3 = img[:, :, 2] == 1
+    mask = c1 * c2 * c3
+    img[mask] = np.array([0, 0, 0])
 
 image_list = ['/content/0001.png', '/content/0002.png']
-img_l = io.imread(image_list[0])
-img_r = io.imread(image_list[1])
+img_l = rgba2rgb(io.imread(image_list[0]))
+img_r = rgba2rgb(io.imread(image_list[1]))
 
 h, w = img_l.shape[:2]
 
@@ -37,6 +43,7 @@ for i in range(0, len(image_list) - 1):
     fname = image_list[i].split('/')[-1]
     img_l = rgba2rgb(io.imread(image_list[i]))
     img_r = rgba2rgb(io.imread(image_list[i + 1]))
+
     print('shape', img_l.shape, img_r.shape)
 
     img_l = cv2.resize(img_l,(max_w, max_h))
