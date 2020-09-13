@@ -37,8 +37,6 @@ for i in range(0, len(image_list) - 1):
     fname = image_list[i].split('/')[-1]
     img_l = rgba2rgb(io.imread(image_list[i]))
     img_r = rgba2rgb(io.imread(image_list[i + 1]))
-    show(img_l)
-    show(img_r)
     print('shape', img_l.shape, img_r.shape)
 
     img_l = cv2.resize(img_l,(max_w, max_h))
