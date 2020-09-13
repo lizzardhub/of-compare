@@ -23,7 +23,7 @@ def w2b(img):
     mask = c1 * c2 * c3
     img[mask] = np.array([0, 0, 0])
 
-image_list = ['/content/0001.png', '/content/0002.png']
+image_list = ['/content/frames_l/frame_0001.jpg', '/content/frames_l/frame_0002.jpg']
 img_l = rgba2rgb(io.imread(image_list[0]))
 img_r = rgba2rgb(io.imread(image_list[1]))
 
