@@ -33,6 +33,7 @@ for i in range(0, len(image_list) - 1):
     fname = image_list[i].split('/')[-1]
     img_l = io.imread(image_list[i])
     img_r = io.imread(image_list[i + 1])
+    print('shape', img_l.shape, img_r.shape)
 
     img_l = cv2.resize(img_l,(max_w, max_h))
     img_r = cv2.resize(img_r,(max_w, max_h))
