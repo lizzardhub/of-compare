@@ -34,7 +34,7 @@ max_w = int(w // 16 * 16)
 if max_h < h: max_h += 16
 if max_w < w: max_w += 16
 
-processor = ME(max_w, max_h, max_len_hor=50, max_len_vert=50)
+processor = ME(max_w, max_h)
 
 img_l = cv2.resize(img_l,(max_w, max_h))
 img_r = cv2.resize(img_r,(max_w, max_h))
