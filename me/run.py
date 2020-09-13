@@ -24,8 +24,8 @@ def w2b(img):
     img[mask] = np.array([0, 0, 0])
 
 image_list = ['/content/frames_l/frame_0001.jpg', '/content/frames_l/frame_0002.jpg']
-img_l = rgba2rgb(io.imread(image_list[0]))
-img_r = rgba2rgb(io.imread(image_list[1]))
+img_l = io.imread(image_list[0])
+img_r = io.imread(image_list[1])
 
 h, w = img_l.shape[:2]
 
@@ -41,8 +41,11 @@ img_r = cv2.resize(img_r,(max_w, max_h))
 
 for i in range(0, len(image_list) - 1):
     fname = image_list[i].split('/')[-1]
-    img_l = rgba2rgb(io.imread(image_list[i]))
-    img_r = rgba2rgb(io.imread(image_list[i + 1]))
+    img_l = io.imread(image_list[i])
+    img_r = io.imread(image_list[i + 1])
+    if img_l.shape[2] == 4:
+        img_l = rgba2rgb(img_l)
+        img_r = rgba2rgb(img_r)
 
     print('shape', img_l.shape, img_r.shape)
 
